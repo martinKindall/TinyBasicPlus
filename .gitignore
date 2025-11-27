@@ -21,3 +21,7 @@ cli/tbp
 notes.txt
 .DS_Store
 
+*.hex
+*.bin
+*.elf
+riscv/TinyBasicPlus.c

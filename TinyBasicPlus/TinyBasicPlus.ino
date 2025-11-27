@@ -264,12 +264,9 @@ char eliminateCompileErrors = 1;  // fix to suppress arduino build errors
   // Use pgmspace/PROGMEM directive to store strings in progmem to save RAM
   #include <avr/pgmspace.h>
 #else
-  #include <stdio.h>
-  #include <stdlib.h>
   #undef ENABLE_TONES
 
   // size of our program ram
-  #define kRamSize   64*1024 /* arbitrary - not dependant on libraries */
 
   #ifdef ENABLE_FILEIO
     FILE * fp;
