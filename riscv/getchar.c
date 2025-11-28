@@ -9,7 +9,7 @@
 // ASCII Special Codes
 #define BKSP 0x08
 #define TAB  0x09
-#define ENTER 0x0D
+#define ENTER NL
 #define ESC  0x1B
 
 // Lookup table: Index = Scancode, Value = ASCII

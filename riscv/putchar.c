@@ -32,8 +32,9 @@ void putchar(unsigned char c) {
     volatile unsigned char *framebuffer = FRAMEBUFFER_BASE;
 
     // --- 1. Handle Character Input ---
-
-    if (c == '\n') {
+    if (c == CR) {
+        // noop
+    } else if (c == NL) {
         // Newline character:
         // Reset column to 0 and advance to the next row
         s_cursor_col = 0;
@@ -66,6 +67,7 @@ void putchar(unsigned char c) {
     if (s_cursor_row >= FRAMEBUFFER_ROWS) {
         // ...reset the row to 0 (back to the top)
         s_cursor_row = 0;
+        cls();
     }
 }
 
@@ -79,4 +81,19 @@ void print(const unsigned char *msg) {
 void println(const unsigned char *msg) {
     print(msg);
     putchar('\n');
+}
+
+void cls() {
+    volatile unsigned char *framebuffer = FRAMEBUFFER_BASE;
+    unsigned int offset;
+
+    for (int j = 0; j < FRAMEBUFFER_COLS; j++) {
+        for (int i = 0; i < FRAMEBUFFER_ROWS; i++) {
+            offset = (i * FRAMEBUFFER_COLS) + j;
+            framebuffer[offset] = 0;
+        }
+    }
+
+    s_cursor_row = 0;
+    s_cursor_col = 0;
 }

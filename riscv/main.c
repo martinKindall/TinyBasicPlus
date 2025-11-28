@@ -2,6 +2,7 @@
 
 
 int main() {
+    cls();
     println("Starting up TinyBasic Plus from RiscV...");
 
     setup();

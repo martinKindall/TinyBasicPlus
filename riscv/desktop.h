@@ -5,6 +5,11 @@
 
 #define kRamSize 2*1024
 
+#define CR	'\r'
+#define NL	'\n'
+
+
+void cls();
 
 void putchar(unsigned char c);
 

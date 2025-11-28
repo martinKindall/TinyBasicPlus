@@ -25,32 +25,32 @@ LINK_OBJS = $(OBJS)
 # --- Targets ---
 
 # Default target
-all: print_char.hex program_data.hex
+all: tiny_basic.hex program_data.hex
 
 program_data.hex: program_data.bin
 	@echo "==> Creating Data HEX file..."
 	$(HEXDUMP) -v -e '"%08x\n"' $< > $@
 	@echo "==> Build complete: program_data.hex"
 
-program_data.bin: print_char.elf
+program_data.bin: tiny_basic.elf
 	@echo "==> Creating data binary..."
 	# This combines .data, .rodata, and .bss (preserves same order of loader.ld)
 	$(OBJCOPY) -O binary -j .data -j .rodata -j .bss $< $@
 	@echo "==> Build complete: program_data.bin"
 
-print_char.hex: print_char.bin
+tiny_basic.hex: tiny_basic.bin
 	@echo "==> Creating HEX file..."
 	$(HEXDUMP) -v -e '"%08x\n"' $< > $@
-	@echo "==> Build complete: print_char.hex"
+	@echo "==> Build complete: tiny_basic.hex"
 
-print_char.bin: print_char.elf
+tiny_basic.bin: tiny_basic.elf
 	@echo "==> Creating bin file..."
 	# Use objcopy to create the bin file, and *only* include the .text
 	# section. This ignores .bss, .data, and all other sections.
 	$(OBJCOPY) -O binary --only-section=.text $< $@
-	@echo "==> Build complete: print_char.bin"
+	@echo "==> Build complete: tiny_basic.bin"
 
-print_char.elf: $(OBJS)
+tiny_basic.elf: $(OBJS)
 	@echo "==> Linking ELF file..."
 	$(LD) $(LINK_OBJS) -o $@ -T loader.ld -m elf32lriscv -nostdlib --no-relax $(LIBGCC_A)
 
@@ -73,4 +73,4 @@ TinyBasicPlus.c: ../TinyBasicPlus/TinyBasicPlus.ino
 .PHONY: clean all
 clean:
 	@echo "==> Cleaning up built files..."
-	rm -f $(OBJS) print_char.elf print_char.hex print_char.bin program_data.bin program_data.hex
+	rm -f $(OBJS) tiny_basic.elf tiny_basic.hex tiny_basic.bin program_data.bin program_data.hex TinyBasicPlus.c
