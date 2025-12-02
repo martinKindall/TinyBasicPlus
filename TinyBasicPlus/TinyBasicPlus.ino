@@ -204,7 +204,11 @@ char eliminateCompileErrors = 1;  // fix to suppress arduino build errors
   // Uses up to one extra byte per program line of memory
   #define ALIGN_MEMORY 1
 #else
-  #undef ALIGN_MEMORY
+  #ifdef RISCV
+  #define ALIGN_MEMORY 1
+  #else
+    #undef ALIGN_MEMORY
+  #endif
 #endif
 
 #ifndef ARDUINO

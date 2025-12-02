@@ -1,4 +1,6 @@
-#define NULL ( (void *) 0)
+#include "stddef.h"
+
+#define RISCV 1
 #define boolean char
 #define true 1
 #define false 0
