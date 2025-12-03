@@ -5,7 +5,7 @@ LD = riscv32-unknown-elf-ld
 OBJCOPY = riscv32-unknown-elf-objcopy
 HEXDUMP = hexdump
 
-CFLAGS += -DFORCE_DESKTOP -Wno-int-to-pointer-cast -fno-builtin-putchar
+CFLAGS += -DFORCE_DESKTOP -Wno-int-to-pointer-cast -fno-builtin-putchar -msmall-data-limit=0
 
 # --- Paths ---
 # You may need to adjust this path to your system

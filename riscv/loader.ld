@@ -10,13 +10,43 @@ SECTIONS
    {
       . = ALIGN(4);
       start.o (.text)
-      *(.text*)
+      *(.text .text*)
    } >IMEM
+
+   .rodata :
+   {
+      . = ALIGN(4);
+      *(.rodata .rodata*)
+   } >DMEM
 
    .data :
    {
-      *(.data*)
-      *(.rodata*)
-      *(.bss*)
+      . = ALIGN(4);
+      *(.data .data*)
+   } >DMEM
+
+   /* * SMALL DATA: The GP points here.
+    * We offset GP by 0x800 (2KB) to maximize the +/- 2KB range.
+    */
+   .sdata :
+   {
+      . = ALIGN(4);
+      PROVIDE( __global_pointer$ = . + 0x800 );
+      *(.sdata .sdata*)
+      *(.srodata .srodata*)
+   } >DMEM
+
+   .sbss :
+   {
+      . = ALIGN(4);
+      *(.sbss .sbss*)
+      *(.scommon)
+   } >DMEM
+
+   .bss :
+   {
+      . = ALIGN(4);
+      *(.bss .bss*)
+      *(COMMON)
    } >DMEM
 }
