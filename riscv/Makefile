@@ -5,7 +5,7 @@ LD = riscv32-unknown-elf-ld
 OBJCOPY = riscv32-unknown-elf-objcopy
 HEXDUMP = hexdump
 
-CFLAGS += -DFORCE_DESKTOP -Wno-int-to-pointer-cast -fno-builtin-putchar -msmall-data-limit=0
+CFLAGS += -DFORCE_DESKTOP -Wno-int-to-pointer-cast -fno-builtin-putchar
 
 # --- Paths ---
 # You may need to adjust this path to your system
@@ -34,8 +34,8 @@ program_data.hex: program_data.bin
 
 program_data.bin: tiny_basic.elf
 	@echo "==> Creating data binary..."
-	# This combines .data, .rodata, and .bss (preserves same order of loader.ld)
-	$(OBJCOPY) -O binary -j .data -j .rodata -j .bss $< $@
+	# This combines data sections (preserves same order of loader.ld)
+	$(OBJCOPY) -O binary -j .rodata -j .data -j .sdata -j .sbss -j .bss $< $@
 	@echo "==> Build complete: program_data.bin"
 
 tiny_basic.hex: tiny_basic.bin
