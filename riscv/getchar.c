@@ -7,10 +7,103 @@
 #define KEYBOARD_BASE ((volatile unsigned short *)0x408000)
 
 // ASCII Special Codes
-#define BKSP 0x08
 #define TAB  0x09
 #define ENTER NL
 #define ESC  0x1B
+#define BUFFER_SIZE 40
+
+static const unsigned char scancode_map[256];
+static const unsigned char scancode_map_shifted[256];
+
+static boolean bufferedDisabled = KEYBOARD_BUFFERED_DISABLED;
+
+static unsigned char buffer[BUFFER_SIZE];
+static unsigned char *bufferPos = buffer;
+
+static unsigned char getcharBuffered();
+static unsigned char getcharSimple();
+
+unsigned char getchar() {
+
+  if (bufferedDisabled) {
+    return getcharSimple();
+  }
+
+  return getcharBuffered();
+}
+
+static unsigned char getcharBuffered() {
+  while (true) {
+    // is data available in buffer?
+    // yes: consume
+    // no: fill buffer until NL
+    if (*bufferPos != 0) {
+      unsigned char val = *bufferPos;
+      bufferPos++;
+
+      return val;
+    }
+
+    bufferPos = buffer;
+    *bufferPos = 0;
+    
+    while (bufferPos - buffer < BUFFER_SIZE - 1) {
+      unsigned char result = getcharSimple();
+
+      if (result == BKSP) {
+        if (bufferPos > buffer) {
+          bufferPos--;
+          *bufferPos = 0;
+
+          putchar(result);
+        }
+        continue;
+      }
+      
+      *bufferPos = result;
+      bufferPos++;
+      *bufferPos = 0;
+
+      putchar(result);
+
+      if (result == NL) break;
+    }
+
+    if (bufferPos - buffer == BUFFER_SIZE - 1) {
+      *bufferPos = NL;
+      bufferPos++;
+      *bufferPos = 0;
+    }
+
+    bufferPos = buffer;
+  }
+
+  // Shouldn't happen
+  return 0;
+}
+
+
+static unsigned char getcharSimple() {
+  volatile unsigned short *keyboard = KEYBOARD_BASE;
+
+  unsigned short data;
+  byte char_data;
+  boolean on_shift;
+
+  while (true) {
+    data = keyboard[0];
+
+    if (data > 0x1FF) {
+      keyboard[0] = 0;
+      char_data = (byte) (data & 0xFF);
+      on_shift = (boolean) ((data & 0x100) >> 8);
+      
+      break;
+    }
+  }
+
+  return on_shift ? scancode_map_shifted[char_data] : scancode_map[char_data];
+}
 
 // Lookup table: Index = Scancode, Value = ASCII
 // optimized for "Set 2" (Standard)
@@ -105,26 +198,3 @@ static const unsigned char scancode_map_shifted[256] = {
     0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
 };
-
-
-unsigned char getchar() {
-  volatile unsigned short *keyboard = KEYBOARD_BASE;
-
-  unsigned short data;
-  byte char_data;
-  boolean on_shift;
-
-  while (true) {
-    data = keyboard[0];
-
-    if (data > 0x1FF) {
-      keyboard[0] = 0;
-      char_data = (byte) (data & 0xFF);
-      on_shift = (boolean) ((data & 0x100) >> 8);
-      
-      break;
-    }
-  }
-
-  return on_shift ? scancode_map_shifted[char_data] : scancode_map[char_data];
-}

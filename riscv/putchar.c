@@ -15,6 +15,8 @@ static void scrollDown();
 static unsigned int s_cursor_col = 0;
 static unsigned int s_cursor_row = 0;
 
+static boolean bufferedDisabled = KEYBOARD_BUFFERED_DISABLED;
+
 // --- Function Implementation ---
 
 /**
@@ -35,7 +37,18 @@ void putchar(unsigned char c) {
 
     // --- 1. Handle Character Input ---
     if (c == CR) {
-        // noop
+        return;
+    } else if (c == BKSP) {
+        if (bufferedDisabled) {
+            return;
+        }
+
+        if (s_cursor_col > 0) {
+            s_cursor_col--;                
+            unsigned int offset = (s_cursor_row * FRAMEBUFFER_COLS) + s_cursor_col;
+            framebuffer[offset] = 0;
+        }
+
     } else if (c == NL) {
         // Newline character:
         // Reset column to 0 and advance to the next row
