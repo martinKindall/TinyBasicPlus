@@ -5,6 +5,8 @@
 // The base memory address of the framebuffer
 #define FRAMEBUFFER_BASE ((volatile unsigned char *)0x401000)
 
+static void scrollDown();
+
 // The dimensions of the framebuffer
 #define FRAMEBUFFER_COLS 80
 #define FRAMEBUFFER_ROWS 30
@@ -60,14 +62,12 @@ void putchar(unsigned char c) {
         s_cursor_row++;
     }
 
-    // --- 3. Handle Row Wrap-around (Screen Wrap) ---
 
     // If the row is now at or past the end of the screen...
-    // (This catches wraps from both newlines and column wraps)
     if (s_cursor_row >= FRAMEBUFFER_ROWS) {
-        // ...reset the row to 0 (back to the top)
-        s_cursor_row = 0;
-        cls();
+        scrollDown();
+
+        s_cursor_row = FRAMEBUFFER_ROWS - 1;
     }
 }
 
@@ -87,13 +87,44 @@ void cls() {
     volatile unsigned char *framebuffer = FRAMEBUFFER_BASE;
     unsigned int offset;
 
-    for (int j = 0; j < FRAMEBUFFER_COLS; j++) {
-        for (int i = 0; i < FRAMEBUFFER_ROWS; i++) {
-            offset = (i * FRAMEBUFFER_COLS) + j;
+    for (int i = 0; i < FRAMEBUFFER_ROWS; i++) {
+
+        unsigned int offsetI = i * FRAMEBUFFER_COLS; 
+
+        for (int j = 0; j < FRAMEBUFFER_COLS; j++) {
+            offset = offsetI + j;
             framebuffer[offset] = 0;
         }
     }
 
     s_cursor_row = 0;
     s_cursor_col = 0;
+}
+
+static void scrollDown() {
+    volatile unsigned char *framebuffer = FRAMEBUFFER_BASE;
+    unsigned int offset;
+    unsigned int offsetPrev;
+
+    for (int i = 1; i < FRAMEBUFFER_ROWS; i++) {
+
+        unsigned int offsetI = i * FRAMEBUFFER_COLS; 
+        unsigned int offsetIPrev = (i-1) * FRAMEBUFFER_COLS; 
+        
+        for (int j = 0; j < FRAMEBUFFER_COLS; j++) {
+            offset = offsetI + j;
+            offsetPrev = offsetIPrev + j;
+
+            // It takes 2 cycles to read from the framebuffer
+            // Hence the first read is just garbage.
+            unsigned char _not_used = framebuffer[offset]; 
+            framebuffer[offsetPrev] = framebuffer[offset];
+        }
+    }
+
+    // clear the last row
+    for (int j = 0; j < FRAMEBUFFER_COLS; j++) {
+        offset = (FRAMEBUFFER_ROWS - 1) * FRAMEBUFFER_COLS + j;
+        framebuffer[offset] = 0;
+    }
 }
