@@ -1,3 +1,17 @@
+# RISC-V for the TinyBasic Plus
+
+This project compiles the TinyBasic Plus to be run on a Risc-V RV32I running on a FPGA with VGA and keyboard access.
+
+## Compilation
+
+```shell
+cd riscv
+make clean
+make
+```
+
+This compilation produces ```tiny_basic.hex``` and ```program_data.hex```, which are the instruction memory and data memory values to be flashed on the FPGA, assuming the Risc-V follows the Harvard architecture (Instruction and Data memories are separated).
+
 TinyBasic Plus
 ==============
 
