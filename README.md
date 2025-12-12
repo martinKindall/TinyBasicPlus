@@ -1,4 +1,4 @@
-# RISC-V for the TinyBasic Plus
+# TinyBasic Plus for the RISC-V 
 
 This project compiles the TinyBasic Plus to be run on a Risc-V RV32I running on a FPGA with VGA and keyboard access.
 
