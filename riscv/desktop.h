@@ -17,9 +17,9 @@ void cls();
 
 void putchar(unsigned char c);
 
-void print(const unsigned char *msg);
+void print(unsigned char *msg);
 
-void println(const unsigned char *msg);
+void println(unsigned char *msg);
 
 unsigned char getchar();
 

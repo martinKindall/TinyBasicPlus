@@ -13,7 +13,7 @@ PATH_TO_LIBGCC = ~/informatica/risc-v/install/rv32i/lib/gcc/riscv32-unknown-elf/
 LIBGCC_A = $(PATH_TO_LIBGCC)/libgcc.a
 
 # --- Source Files ---
-C_SRCS = main.c putchar.c getchar.c TinyBasicPlus.c rand.c
+C_SRCS = main.c putchar.c getchar.c TinyBasicPlus.c rand.c spi.c utils.c
 S_SRCS = start.S
 
 # --- Object Files ---

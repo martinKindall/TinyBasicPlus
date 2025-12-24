@@ -57,14 +57,14 @@ void putchar(unsigned char c) {
     }
 }
 
-void print(const unsigned char *msg) {
+void print(unsigned char *msg) {
     while(*msg) {
         putchar(*msg);
 	    msg++;
 	}
 }
 
-void println(const unsigned char *msg) {
+void println(unsigned char *msg) {
     print(msg);
     putchar('\n');
 }
