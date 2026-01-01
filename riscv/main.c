@@ -6,14 +6,9 @@
 int main() {
     cls();
     
-    read_flash();
+    unsigned char* content = read_flash();
 
-    unsigned char buf[11];
-
-    for (int i = 0; i < 8; i++) {
-        ultoa(read_flash_direct(i), buf);
-        println(buf);
-    }
+    println(content);
 
     println("Starting up TinyBasic Plus from RiscV...");
 
