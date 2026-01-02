@@ -1,16 +1,10 @@
 # --- Toolchain Definitions ---
 AS = riscv32-unknown-elf-as -march=rv32i -mabi=ilp32
-GCC = riscv32-unknown-elf-gcc -march=rv32i -mabi=ilp32 -c
-LD = riscv32-unknown-elf-ld
+GCC = riscv32-unknown-elf-gcc -march=rv32i -mabi=ilp32
 OBJCOPY = riscv32-unknown-elf-objcopy
 HEXDUMP = hexdump
 
 CFLAGS += -DFORCE_DESKTOP -Wno-int-to-pointer-cast -fno-builtin-putchar -Wno-discarded-qualifiers
-
-# --- Paths ---
-# You may need to adjust this path to your system
-PATH_TO_LIBGCC = /opt/riscv/lib/gcc/riscv32-unknown-elf/15.2.0
-LIBGCC_A = $(PATH_TO_LIBGCC)/libgcc.a
 
 # --- Source Files ---
 C_SRCS = main.c putchar.c getchar.c TinyBasicPlus.c rand.c spi.c utils.c
@@ -52,7 +46,7 @@ tiny_basic.bin: tiny_basic.elf
 
 tiny_basic.elf: $(OBJS)
 	@echo "==> Linking ELF file..."
-	$(LD) $(LINK_OBJS) -o $@ -T loader.ld -m elf32lriscv -nostdlib --no-relax $(LIBGCC_A)
+	$(GCC) $(LINK_OBJS) -o $@ -nostdlib -lgcc -T loader.ld
 
 TinyBasicPlus.c: ../TinyBasicPlus/TinyBasicPlus.ino
 	@echo Linking .c file to the Arduino .ino source
@@ -62,7 +56,7 @@ TinyBasicPlus.c: ../TinyBasicPlus/TinyBasicPlus.ino
 %.o: %.c
 	@echo "==> Compiling C: $<"
 	# "-c" is the standard flag to "compile only, do not link".
-	$(GCC) $(CFLAGS) $< -o $@
+	$(GCC) -c $(CFLAGS) $< -o $@
 
 # Pattern rule for assembling .S files to .o files
 %.o: %.S
