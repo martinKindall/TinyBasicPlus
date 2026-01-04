@@ -11,7 +11,13 @@ unsigned char* read_flash() {
 
   spi_ctrl[0] = 1;   // request read
 
-  while (spi_ctrl[0] == 0) {}
+  unsigned long count = 0;
+  while (spi_ctrl[0] == 0) {
+    count++;
+  }
+  unsigned char buffer[11];
+  ultoa(count, buffer);
+  println(buffer);
 
   return spi;
 }

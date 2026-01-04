@@ -1,2 +1,2 @@
 
-char *ultoa(unsigned long value, char *buffer);
+void *ultoa(unsigned long value, unsigned char *buffer);

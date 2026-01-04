@@ -1,9 +1,9 @@
 #include "utils.h"
 
-char *ultoa(unsigned long value, char *buffer) {
-    char *p = buffer;
-    char *p1 = buffer;
-    char tmp;
+void *ultoa(unsigned long value, unsigned char *buffer) {
+    unsigned char *p = buffer;
+    unsigned char *p1 = buffer;
+    unsigned char tmp;
 
     // Generate digits in reverse order
     do {
@@ -19,6 +19,4 @@ char *ultoa(unsigned long value, char *buffer) {
         *p-- = *p1;
         *p1++ = tmp;
     }
-
-    return buffer;
 }
