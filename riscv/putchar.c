@@ -1,7 +1,7 @@
 #include "desktop.h"
 
 // The base memory address of the framebuffer
-#define FRAMEBUFFER_BASE ((volatile unsigned char *)0x401000)
+#define FRAMEBUFFER_BASE ((volatile unsigned char *)0xA0000000)
 
 static void scrollDown();
 

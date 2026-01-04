@@ -4,7 +4,7 @@
   typedef unsigned char byte;
 #endif
 
-#define KEYBOARD_BASE ((volatile unsigned short *)0x408000)
+#define KEYBOARD_BASE ((volatile unsigned short *)0xC0000000)
 
 // ASCII Special Codes
 #define TAB  0x09

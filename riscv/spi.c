@@ -2,8 +2,8 @@
 #include "utils.h"
 #include "spi.h"
 
-#define SPI ((volatile unsigned char *)0x410000)
-#define SPI_CTRL ((volatile unsigned char *)0x420000)
+#define SPI ((volatile unsigned char *)0x80800000)
+#define SPI_CTRL ((volatile unsigned char *)0x80400000)
 
 unsigned char* read_flash() {
   volatile unsigned char *spi_ctrl = SPI_CTRL;
