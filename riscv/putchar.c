@@ -69,6 +69,15 @@ void println(unsigned char *msg) {
     putchar('\n');
 }
 
+void println_bytes(unsigned char *msg, unsigned int n_bytes) {
+    for (int i = 0; i < n_bytes; i++) {
+        putchar(*msg);
+	    msg++;
+    }
+
+    putchar('\n');
+}
+
 void cls() {
     volatile unsigned char *framebuffer = FRAMEBUFFER_BASE;
     unsigned int offset;

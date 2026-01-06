@@ -21,6 +21,8 @@ void print(unsigned char *msg);
 
 void println(unsigned char *msg);
 
+void println_bytes(unsigned char *msg, unsigned int n_bytes);
+
 unsigned char getchar();
 
 void srand(short int seed);

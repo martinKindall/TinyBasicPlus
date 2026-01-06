@@ -1,2 +1,2 @@
 
-unsigned char* read_flash();
+unsigned char* read_flash(unsigned long offset, unsigned long len);

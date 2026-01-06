@@ -3,13 +3,13 @@
 #include "spi.h"
 
 #define SPI ((volatile unsigned char *)0x80800000)
-#define SPI_CTRL ((volatile unsigned char *)0x80400000)
+#define SPI_CTRL ((volatile unsigned long *)0x80400000)
 
-unsigned char* read_flash() {
-  volatile unsigned char *spi_ctrl = SPI_CTRL;
+unsigned char* read_flash(unsigned long offset, unsigned long len) {
+  volatile unsigned long *spi_ctrl = SPI_CTRL;
   volatile unsigned char *spi = SPI;
 
-  spi_ctrl[0] = 1;   // request read
+  spi_ctrl[offset] = len;   // request read
 
   unsigned long count = 0;
   while (spi_ctrl[0] == 0) {
